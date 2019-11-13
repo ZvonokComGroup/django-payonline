@@ -1,25 +1,26 @@
+
+
 class DataProxy(object):
 
     aliases = {
         'datetime': 'DateTime',
         'transaction_id': 'TransactionID',
-        'order': 'OrderId',
+        'order_id': 'OrderId',
         'amount': 'Amount',
         'currency': 'Currency',
-        'provider': 'Provider',
+        'payment_amount': 'PaymentAmount',
+        'payment_currency': 'PaymentCurrency',
         'card_holder': 'CardHolder',
-        'cart_number': 'CardNumber',
+        'card_number': 'CardNumber',
         'country': 'Country',
         'city': 'City',
         'address': 'Address',
-        'Phone': 'phone',
-        'wm_trans_id': 'WmTransId',
-        'wm_inv_id': 'WmInvId',
-        'wm_id': 'WmId',
-        'wm_purse': 'WmPurse',
         'ip_address': 'IpAddress',
         'ip_country': 'IpCountry',
         'bin_country': 'BinCountry',
+        'special_conditions': 'SpecialConditions',
+        'provider': 'Provider',
+        'rebill_anchor': 'RebillAnchor',
     }
 
     def __init__(self, data):

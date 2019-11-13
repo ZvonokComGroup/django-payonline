@@ -1,7 +1,6 @@
 from hashlib import md5
 
 from django import forms
-from django.utils.datastructures import SortedDict
 
 from .models import PaymentData
 from .helpers import DataProxy
@@ -26,6 +25,7 @@ class PaymentDataForm(forms.ModelForm):
 
     class Meta:
         model = PaymentData
+        fields = list(DataProxy.aliases.keys())
 
     def __init__(self, *args, **kwargs):
         self.shop = kwargs.pop('shop')
@@ -33,19 +33,15 @@ class PaymentDataForm(forms.ModelForm):
         kwargs['data'] = DataProxy(kwargs['data'])
         super().__init__(*args, **kwargs)
 
-    def get_security_key_params(self):
-        params = SortedDict()
-        params['DateTime'] = self.data.get('DateTime', '')
-        params['TransactionID'] = self.data.get('TransactionID', '')
-        params['OrderId'] = self.data.get('OrderId', '')
-        params['Amount'] = self.data.get('Amount', '')
-        params['Currency'] = self.data.get('Currency', '')
-        params['PrivateSecurityKey'] = self.private_security_key
-        return params
-
     def get_security_key(self):
-        params = self.get_security_key_params()
-        key = md5('&'.join('='.join(i) for i in params.items())).hexdigest()
+        params = [
+            ('DateTime', self.data.get('DateTime', '')),
+            ('TransactionID', self.data.get('TransactionID', '')),
+            ('OrderId', self.data.get('OrderId', '')),
+            ('Amount', self.data.get('Amount', '')),
+            ('Currency', self.data.get('Currency', '')),
+            ('PrivateSecurityKey', self.private_security_key)]
+        key = md5('&'.join('='.join(i) for i in params)).hexdigest()
         return key
 
     def clean(self):
