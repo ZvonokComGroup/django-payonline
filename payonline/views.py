@@ -1,13 +1,11 @@
-from hashlib import md5
-
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import render
-from django.utils.datastructures import SortedDict
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
 from .forms import PaymentDataForm
+from .logic import get_security_key
 from .settings import CONFIG
 
 
@@ -28,25 +26,20 @@ class PayView(View):
     def get_private_security_key(self):
         return CONFIG['PRIVATE_SECURITY_KEY']
 
-    def get_security_key_params(self, order):
-        params = SortedDict()
-        params['MerchantId'] = self.get_merchant_id()
-        params['OrderId'] = self.get_order_id()
-        params['Amount'] = self.get_amount()
-        params['Currency'] = self.get_currency()
-        params['PrivateSecurityKey'] = self.get_private_security_key()
-        return params
-
-    def get_security_key(self):
-        params = self.get_security_key_params()
-        return md5('&'.join('='.join(i) for i in params.items())).hexdigest()
+    def _get_security_key(self):
+        return get_security_key(
+            self.get_order_id(),
+            self.get_amount(),
+            merchant_id=self.get_merchant_id(),
+            currency=self.get_currency(),
+            private_security_key=self.get_private_security_key())
 
     def get_context_data(self, **kwargs):
         kwargs.update({'order_id': self.get_order_id(),
                        'amount': self.get_amount(),
                        'merchant_id': self.get_merchant_id(),
                        'currency': self.get_currency(),
-                       'security_key': self.get_security_key()})
+                       'security_key': self._get_security_key()})
         return kwargs
 
     def get(self, request, *args, **kwargs):
