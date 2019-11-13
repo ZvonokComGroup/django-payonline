@@ -7,6 +7,7 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
 
+from .forms import PaymentDataForm
 from .settings import CONFIG
 
 
@@ -62,7 +63,7 @@ class CallbackView(View):
 
     def process_form(self, form):
         if form.is_valid():
-            payment_data = form.save()
+            form.save()
             return HttpResponse()
         return HttpResponseBadRequest()
 

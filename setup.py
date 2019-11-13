@@ -8,12 +8,12 @@ def read(filename):
 
 setup(
     name='django-payonline',
-    version='0.1.1',
+    version='1.0.0',
     license='ISC',
     description='A Django application for integration with PayOnline System',
     long_description=read('README.rst'),
-    author='Mike Yumatov',
-    author_email='mike@yumatov.org',
+    author='Ivan Petukhov',
+    author_email='satels@gmail.com',
     packages=find_packages(),
     classifiers=[
         'Development Status :: 4 - Beta',
@@ -21,8 +21,6 @@ setup(
         'Intended Audience :: Developers',
         'License :: OSI Approved :: ISC License (ISCL)',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2.5',
-        'Programming Language :: Python :: 2.6',
-        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
         'Topic :: Internet :: WWW/HTTP'],
 )
