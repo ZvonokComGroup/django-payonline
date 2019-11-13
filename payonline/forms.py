@@ -7,6 +7,19 @@ from .models import PaymentData
 from .helpers import DataProxy
 
 
+class PaymentDefaultForm(forms.Form):
+
+    MerchantId = forms.IntegerField()
+    OrderId = forms.CharField(max_length=50)
+    Amount = forms.DecimalField(min_value=0, max_digits=14, decimal_places=2)
+    Currency = forms.CharField(max_length=3, min_length=3)
+    ValidUntil = forms.DateTimeField(required=False)
+    OrderDescription = forms.CharField(max_length=100, required=False)
+    SecurityKey = forms.CharField(min_length=32, max_length=32)
+    ReturnUrl = forms.CharField(required=False)
+    FailUrl = forms.CharField(required=False)
+
+
 class PaymentDataForm(forms.ModelForm):
 
     SecurityKey = forms.CharField(min_length=32, max_length=32)
@@ -18,7 +31,7 @@ class PaymentDataForm(forms.ModelForm):
         self.shop = kwargs.pop('shop')
         self.private_security_key = kwargs.pop('private_security_key')
         kwargs['data'] = DataProxy(kwargs['data'])
-        super(PaymentDataForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     def get_security_key_params(self):
         params = SortedDict()
@@ -36,6 +49,6 @@ class PaymentDataForm(forms.ModelForm):
         return key
 
     def clean(self):
-        if self.data.get('SecurityKey') != self.get_security_key():
-            raise forms.ValidationError('Wrong security key')
+        if self.cleaned_data.get('SecurityKey') != self.get_security_key():
+            self.add_error('SecurityKey', 'Wrong security key')
         return self.cleaned_data
