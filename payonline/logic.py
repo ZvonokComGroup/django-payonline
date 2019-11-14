@@ -17,4 +17,4 @@ def get_security_key(order_id, amount, merchant_id=CONFIG['MERCHANT_ID'],
         params += [('OrderDescription', order_description)]
     params += [('PrivateSecurityKey', private_security_key)]
 
-    return md5('&'.join('='.join(i) for i in params)).hexdigest()
+    return md5(('&'.join('='.join(i) for i in params)).encode('utf-8')).hexdigest()
