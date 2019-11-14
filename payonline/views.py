@@ -7,6 +7,7 @@ from django.views.generic import View
 from .forms import PaymentDataForm
 from .logic import get_security_key
 from .settings import CONFIG
+from .signals import result_received
 
 
 class PayView(View):
@@ -56,7 +57,12 @@ class CallbackView(View):
 
     def process_form(self, form):
         if form.is_valid():
-            form.save()
+            payment = form.save()
+            result_received.send(
+                sender=payment,
+                OrderId=form['OrderId'],
+                Amount=form['Amount'],
+            )
             return HttpResponse()
         return HttpResponseBadRequest()
 
