@@ -18,3 +18,38 @@ def get_security_key(order_id, amount, merchant_id=CONFIG['MERCHANT_ID'],
     params += [('PrivateSecurityKey', private_security_key)]
 
     return md5(('&'.join('='.join(i) for i in params)).encode('utf-8')).hexdigest()
+
+
+def get_good_position(description, quantity, amount, tax):
+    return {
+        'description': str(description),
+        'quantity': quantity,
+        'amount': str(amount),
+        'tax': tax,
+    }
+
+
+TAX_NO_NDS = 'none'
+NDS_20 = 'vat20'
+
+
+def get_fiscal_data(transaction_id, total_amount, goods, client_inn=None,
+                    payment_system_type='card', operation='Benefit'):
+    data = {
+        'operation': operation,
+        'transactionId': transaction_id,
+        'paymentSystemType': payment_system_type,
+        'totalAmount': total_amount,
+        'goods': goods,
+    }
+    if client_inn:
+        data['clientInn'] = client_inn
+    return data
+
+
+def get_fiscal_secret_key(fiscal_body, merchant_id=CONFIG['MERCHANT_ID'],
+                          private_security_key=CONFIG['PRIVATE_SECURITY_KEY']):
+    params = [('RequestBody', fiscal_body),
+              ('MerchantId', str(merchant_id)),
+              ('PrivateSecurityKey', private_security_key)]
+    return md5(('&'.join('='.join(i) for i in params)).encode('utf-8')).hexdigest()

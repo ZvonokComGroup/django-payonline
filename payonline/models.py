@@ -28,5 +28,5 @@ class PaymentData(models.Model):
     special_conditions = models.CharField(max_length=255, blank=True, null=True)
     provider = models.CharField(max_length=32, blank=True, null=True)
     rebill_anchor = models.CharField(max_length=32, blank=True, null=True)
-
+    fiscal_completed = models.BooleanField(default=False)
 
