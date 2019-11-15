@@ -60,8 +60,8 @@ class CallbackView(View):
             payment = form.save()
             result_received.send(
                 sender=payment,
-                OrderId=form['OrderId'],
-                Amount=form['Amount'],
+                OrderId=form['order_id'],
+                Amount=form['amount'],
             )
             return HttpResponse()
         return HttpResponseBadRequest()
