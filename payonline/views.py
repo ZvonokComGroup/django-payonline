@@ -53,7 +53,7 @@ class CallbackView(View):
         return CONFIG['PRIVATE_SECURITY_KEY']
 
     def get_form(self, data):
-        return PaymentDataForm(data, self.get_private_security_key())
+        return PaymentDataForm(data=data, private_security_key=self.get_private_security_key())
 
     def process_form(self, form):
         if form.is_valid():
@@ -71,10 +71,10 @@ class CallbackView(View):
         return super(CallbackView, self).dispatch(*args, **kwargs)
 
     def get(self, request, *args, **kwargs):
-        return self.process_form(self.get_form(request.GET))
+        return self.process_form(self.get_form(request.GET or None))
 
     def post(self, request, *args, **kwargs):
-        return self.process_form(self.get_form(request.POST))
+        return self.process_form(self.get_form(request.POST or None))
 
 
 class FailView(View):
