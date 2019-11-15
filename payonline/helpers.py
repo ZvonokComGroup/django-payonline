@@ -32,6 +32,8 @@ class DataProxy(object):
         return self.data[name]
 
     def get(self, name, default=None):
+        if self.data is None:
+            return default
         if name in self.aliases:
             name = self.aliases[name]
         return self.data.get(name, default)

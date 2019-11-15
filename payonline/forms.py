@@ -40,7 +40,7 @@ class PaymentDataForm(forms.ModelForm):
             ('Amount', self.data.get('Amount', '')),
             ('Currency', self.data.get('Currency', '')),
             ('PrivateSecurityKey', self.private_security_key)]
-        key = md5('&'.join('='.join(i) for i in params)).hexdigest()
+        key = md5(('&'.join('='.join(i) for i in params)).encode('utf-8')).hexdigest()
         return key
 
     def clean(self):
