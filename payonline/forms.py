@@ -27,7 +27,7 @@ class PaymentDataForm(forms.ModelForm):
         model = PaymentData
         fields = list(DataProxy.aliases.keys())
 
-    def __init__(self, private_security_key, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.private_security_key = kwargs.pop('private_security_key')
         kwargs['data'] = DataProxy(kwargs['data'])
         super().__init__(*args, **kwargs)
