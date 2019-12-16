@@ -6,6 +6,7 @@ from django.views.generic import View
 
 from .forms import PaymentDataForm
 from .logic import get_security_key
+from .models import PaymentData
 from .settings import CONFIG
 from .signals import result_received
 
@@ -57,7 +58,11 @@ class CallbackView(View):
 
     def process_form(self, form):
         if form.is_valid():
-            payment = form.save()
+            payments = PaymentData.objects.filter(order_id=form['order_id'])
+            if payments:
+                payment = payments[0]
+            else:
+                payment = form.save()
             result_received.send(
                 sender=payment,
                 OrderId=form['order_id'],
