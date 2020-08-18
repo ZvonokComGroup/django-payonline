@@ -1,5 +1,5 @@
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import View
@@ -58,7 +58,7 @@ class CallbackView(View):
 
     def process_form(self, form):
         if form.is_valid():
-            payments = PaymentData.objects.filter(order_id=form['order_id'])
+            payments = PaymentData.objects.filter(order_id=form.cleaned_data['order_id'])
             if payments:
                 payment = payments[0]
             else:
@@ -68,7 +68,7 @@ class CallbackView(View):
                 OrderId=form['order_id'],
                 Amount=form['amount'],
             )
-            return HttpResponse()
+            return redirect(CONFIG['SUCCESS_URL'])
         return HttpResponseBadRequest()
 
     @method_decorator(csrf_exempt)
