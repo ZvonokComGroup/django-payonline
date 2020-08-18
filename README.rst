@@ -27,6 +27,7 @@ Configuration
        PAYONLINE_CONFIG = {
            'MERCHANT_ID': '...',
            'PRIVATE_SECURITY_KEY': '...',
+           'SUCCESS_URL': '...',
        }
 
 4. Add ``payonline.urls`` to project's urlconf::
